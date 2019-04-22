@@ -1,0 +1,11 @@
+{
+    "name": "rsg/multiinsert",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Serhii Romanovych",
+            "email": "s.g.romanovich@gmail.com"
+        }
+    ],
+    "require": {}
+}
