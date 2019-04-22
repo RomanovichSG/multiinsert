@@ -7,5 +7,16 @@
             "email": "s.g.romanovich@gmail.com"
         }
     ],
-    "require": {}
+    "description": "",
+    "config": {
+        "platform": {
+            "php": "7.1"
+        }
+    },
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "MultiInsert\\Component\\": "src/"
+        }
+    }
 }
