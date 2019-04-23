@@ -162,8 +162,9 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 
         $columnsCount = count($columns);
         $values = rtrim(str_repeat('?,', $columnsCount), ',');
+        $values = rtrim(str_repeat("($values),", count($this->rows)), ',');
 
-        return "{$queryPrefix} ({$values}) {$querySuffix}";
+        return "{$queryPrefix} {$values} {$querySuffix}";
     }
 
     /**
@@ -192,7 +193,7 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 
         $a = '';
         foreach ($params as $columnName => $rule) {
-            $a .= "`{$columnName}` = {$rule['rule']},";
+            $a .= "`{$columnName}` = {$rule},";
         }
 
         return rtrim($a, ',');
