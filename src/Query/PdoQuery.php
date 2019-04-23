@@ -26,7 +26,7 @@ class PdoQuery extends AbstractQuery
     }
 
     /**
-     * @inheritDoc
+     * Executing query using \PDO connection
      */
     protected function process(): void
     {

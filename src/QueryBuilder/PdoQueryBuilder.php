@@ -33,6 +33,11 @@ class PdoQueryBuilder extends  AbstractQueryBuilder
         $this->connection = $connection;
     }
 
+    /**
+     * Building new PdoQuery
+     *
+     * @return QueryInterface
+     */
     protected function buildQuery(): QueryInterface
     {
         $query = $this->getNewQuery();
@@ -42,11 +47,21 @@ class PdoQueryBuilder extends  AbstractQueryBuilder
         return $query;
     }
 
+    /**
+     * PdoQuery factory
+     *
+     * @return PdoQuery
+     */
     protected function getNewQuery() : PdoQuery
     {
         return new PdoQuery($this->connection);
     }
 
+    /**
+     * Process of building prepared for the PDO a MySql query
+     *
+     * @return string
+     */
     private function buildSqlQuery() : string
     {
         $queryPrefix = '';
@@ -101,6 +116,11 @@ class PdoQueryBuilder extends  AbstractQueryBuilder
         return "{$queryPrefix} ({$values}) {$querySuffix}";
     }
 
+    /**
+     * Values for the query
+     *
+     * @return array
+     */
     private function getParams() : array
     {
         return $this->params;

@@ -98,5 +98,6 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
         return $this->buildQuery();
     }
 
+    /* Implement the way of building */
     abstract protected function buildQuery() : QueryInterface ;
 }

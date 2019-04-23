@@ -44,5 +44,6 @@ abstract class AbstractQuery implements QueryInterface
         $this->process();
     }
 
+    /* Implement the way of doing */
     abstract protected function process() : void ;
 }
