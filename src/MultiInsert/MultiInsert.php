@@ -2,6 +2,7 @@
 
 namespace MultiInsert\Component\MultiInsert;
 
+use InvalidArgumentException;
 use MultiInsert\Component\QueryBuilder\QueryBuilderInterface;
 
 /**
@@ -9,7 +10,7 @@ use MultiInsert\Component\QueryBuilder\QueryBuilderInterface;
  *
  * @package MultiInsert\Component\MultiInsert
  */
-class MultiInsert implements MultiInsertInterface
+class MultiInsert
 {
 
     /**
@@ -18,29 +19,9 @@ class MultiInsert implements MultiInsertInterface
     protected $queryBuilder;
 
     /**
-     * @var string
-     */
-    protected $table;
-
-    /**
      * @var array
      */
     protected $rows;
-
-    /**
-     * @var array
-     */
-    protected $columns;
-
-    /**
-     * @var int
-     */
-    protected $mode;
-
-    /**
-     * @var array
-     */
-    protected $updateParams;
 
     /**
      * @var int
@@ -48,7 +29,9 @@ class MultiInsert implements MultiInsertInterface
     protected $chunkSize = 50;
 
     /**
-     * @inheritDoc
+     * MultiInsert constructor.
+     *
+     * @param QueryBuilderInterface $queryBuilder
      */
     public function __construct(QueryBuilderInterface $queryBuilder)
     {
@@ -56,15 +39,22 @@ class MultiInsert implements MultiInsertInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setTable(string $name): void
-    {
-        $this->table = $name;
-    }
-
-    /**
-     * @inheritDoc
+     * @param array $rows Put data for insert
+     * Example:
+     * [
+     *      [
+     *          'id' => 1,
+     *          'name' => 'Foo',
+     *      ],
+     *      [
+     *          'id' => 2,
+     *          'name' => 'Bar',
+     *      ],
+     *      [
+     *          'id' => 3,
+     *          'name' => 'Baz',
+     *      ],
+     * ]
      */
     public function setRows(array $rows): void
     {
@@ -72,80 +62,92 @@ class MultiInsert implements MultiInsertInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string $name Put the table name
+     */
+    public function setTable(string $name): void
+    {
+        $this->queryBuilder->setTable($name);
+    }
+
+    /**
+     * @param array $columns Put data for choosing columns to insert
+     * Example:
+     * ['id', 'name']
      */
     public function setColumns(array $columns): void
     {
-        $this->columns = $columns;
+        $this->queryBuilder->setColumns($columns);
     }
 
     /**
-     * @inheritDoc
+     * @param integer $mode Put mode for choosing the type of a query
+     * Example:
+     * QueryBuilderInterface::DEFAULT_MODE
      */
     public function setMode(int $mode): void
     {
-        $this->mode = $mode;
+        $this->queryBuilder->setMode($mode);
     }
 
     /**
-     * @inheritDoc
+     * @param array $updateParams Put update rules if you choose update mode
+     * Example:
+     * [
+     *      'name' => 'concat_ws(' ', name, VALUES(name))'
+     * ]
      */
     public function setUpdateParams(array $updateParams): void
     {
-        $this->updateParams = $updateParams;
+        $this->queryBuilder->setUpdateParams($updateParams);
     }
 
     /**
-     * @inheritDoc
-     *
-     * @throws \InvalidArgumentException
+     * @param integer $size Put a size of wanted chunks
+     * Example:
+     * For the next data
+     * [
+     *      [
+     *          'id' => 1,
+     *          'name' => 'Foo',
+     *      ],
+     *      [
+     *          'id' => 2,
+     *          'name' => 'Bar',
+     *      ],
+     *      [
+     *          'id' => 3,
+     *          'name' => 'Baz',
+     *      ],
+     * ]
+     * with the chunkSize = 2 will be executed two queries
+     * ... (`name`) VALUES ('Foo','Bar');
+     * ... (`name`) VALUES ('Baz');
      */
     public function setChunkSize(int $size): void
     {
         if ($size < 1) {
-            throw new \InvalidArgumentException('Chunk size must be greater than zero');
+            throw new InvalidArgumentException('Chunk size must be greater than zero');
         }
 
         $this->chunkSize = $size;
     }
 
     /**
-     * @inheritDoc
+     * Execute queries
      */
     public function execute(): void
     {
         if ($this->rows === null) {
-            return;
+            throw new InvalidArgumentException('You must put rows to start inserting');
         }
 
         $chunks = array_chunk($this->rows, $this->chunkSize);
 
         foreach ($chunks as $chunk) {
-            if (!is_array($chunk) || empty($chunk)) {
-                continue;
+            if (is_array($chunk) && !empty($chunk)) {
+                $this->queryBuilder->setRows($chunk);
+                $this->queryBuilder->getQuery()->execute();
             }
-
-            $qb = $this->queryBuilder;
-            $qb->setRows($chunk);
-
-            if ($this->table !== null) {
-                $qb->setTable($this->table);
-            }
-
-            if ($this->columns !== null) {
-                $qb->setColumns($this->columns);
-            }
-
-            if ($this->mode !== null) {
-                $qb->setMode($this->mode);
-            }
-
-            if ($this->updateParams !== null) {
-                $qb->setUpdateParams($this->updateParams);
-            }
-
-            $qb->getQuery()
-                ->execute();
         }
     }
 }
