@@ -2,6 +2,7 @@
 
 namespace MultiInsert\Component\QueryBuilder;
 
+use MultiInsert\Component\Fabric\QueryFabricInterface;
 use MultiInsert\Component\Query\QueryInterface;
 
 /**
@@ -32,6 +33,13 @@ interface QueryBuilderInterface
      * 'INSERT INTO ... ON DUPLICATE UPDATE ...'
      */
     const UPDATE_MODE = 2;
+
+    /**
+     * QueryBuilderInterface constructor.
+     *
+     * @param QueryFabricInterface $queryFabric
+     */
+    public function __construct(QueryFabricInterface $queryFabric);
 
     /**
      * @param string $name Put the table name
