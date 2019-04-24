@@ -2,6 +2,8 @@
 
 namespace MultiInsert\Component\Query;
 
+use PDO;
+
 /**
  * Class Query
  *
@@ -11,16 +13,16 @@ class PdoQuery extends AbstractQuery
 {
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     private $connection;
 
     /**
      * PdoQuery constructor.
      *
-     * @param \PDO $connection
+     * @param PDO $connection
      */
-    public function __construct(\PDO $connection)
+    public function __construct(PDO $connection)
     {
         $this->connection = $connection;
     }

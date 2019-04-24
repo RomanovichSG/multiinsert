@@ -36,9 +36,9 @@ interface QueryBuilderInterface
     /**
      * @param string $name Put the table name
      *
-     * @return $this
+     * @return void
      */
-    public function setTable(string $name): self ;
+    public function setTable(string $name): void ;
 
     /**
      * @param array $rows Put data for insert
@@ -58,27 +58,27 @@ interface QueryBuilderInterface
      *      ],
      * ]
      *
-     * @return $this
+     * @return void
      */
-    public function setRows(array $rows): self ;
+    public function setRows(array $rows): void ;
 
     /**
      * @param array $columns Put data for choosing columns to insert
      * Example:
      * ['id', 'name']
      *
-     * @return $this
+     * @return void
      */
-    public function setColumns(array $columns): self ;
+    public function setColumns(array $columns): void ;
 
     /**
      * @param integer $mode Put mode for choosing the type of a query
      * Example:
      * QueryBuilderInterface::DEFAULT_MODE
      *
-     * @return $this
+     * @return void
      */
-    public function setMode(int $mode): self ;
+    public function setMode(int $mode): void ;
 
     /**
      * @param array $updateParams Put update rules if you choose update mode
@@ -87,9 +87,9 @@ interface QueryBuilderInterface
      *      'name' => 'concat_ws(' ', name, VALUES(name))'
      * ]
      *
-     * @return $this
+     * @return void
      */
-    public function setUpdateParams(array $updateParams): self ;
+    public function setUpdateParams(array $updateParams): void ;
 
     /**
      * Returning prepared Query
