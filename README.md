@@ -15,23 +15,24 @@ Object with the possibility to execute query
 #Usage
 ```php
 $dbh = new PDO('mysql:host=localhost;dbname=test', getenv('dbuser'), getenv('dbpass'));
-$qb = new PdoQueryBuilder($dbh);
+$qf = new PdoQueryFabric($dbh);
+$qb = new PdoQueryBuilder($qf);
 $mi = new MultiInsert($qb);
 $mi->setTable('test');
 $mi->setRows(
     [
-         [
-             'id' => 1,
-             'name' => 'Foo',
-         ],
-         [
-             'id' => 2,
-             'name' => 'Bar',
-         ],
-         [
-             'id' => 3,
-             'name' => 'Baz',
-         ],
+        [
+            'id' => 1,
+            'name' => 'Foo',
+        ],
+        [
+            'id' => 2,
+            'name' => 'Bar',
+        ],
+        [
+            'id' => 3,
+            'name' => 'Baz',
+        ],
     ]
 );
 $mi->setColumns(['name']);
