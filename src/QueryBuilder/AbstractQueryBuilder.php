@@ -2,6 +2,8 @@
 
 namespace MultiInsert\Component\QueryBuilder;
 
+use BadMethodCallException;
+use InvalidArgumentException;
 use MultiInsert\Component\Query\QueryInterface;
 
 abstract class AbstractQueryBuilder implements QueryBuilderInterface
@@ -40,51 +42,41 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setTable(string $name): QueryBuilderInterface
+    public function setTable(string $name): void
     {
        $this->table = $name;
-
-       return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function setRows(array $rows): QueryBuilderInterface
+    public function setRows(array $rows): void
     {
         $this->rows = $rows;
-
-        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function setColumns(array $columns): QueryBuilderInterface
+    public function setColumns(array $columns): void
     {
         $this->columns = $columns;
-
-        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function setMode(int $mode): QueryBuilderInterface
+    public function setMode(int $mode): void
     {
         $this->mode = $mode;
-
-        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function setUpdateParams(array $updateParams): QueryBuilderInterface
+    public function setUpdateParams(array $updateParams): void
     {
         $this->updateParams = $updateParams;
-
-        return $this;
     }
 
     /**
@@ -93,11 +85,11 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
     public function getQuery(): QueryInterface
     {
         if (empty($this->table)) {
-            throw new \BadMethodCallException('Table name was not set');
+            throw new BadMethodCallException('Table name was not set');
         }
 
         if (empty($this->rows)) {
-            throw new \BadMethodCallException('Rows data were not set');
+            throw new BadMethodCallException('Rows data were not set');
         }
 
         $query = $this->getNewQuery();
@@ -135,14 +127,14 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
                 $updateRule = $this->buildUpdateQueryParams($columns, $this->updateParams);
 
                 if (empty($updateRule)) {
-                    throw new \InvalidArgumentException('Rule for update mode can\'t be empty');
+                    throw new InvalidArgumentException('Rule for update mode can\'t be empty');
                 }
 
                 $querySuffix .= $updateRule;
 
                 break;
             default :
-                throw new \InvalidArgumentException("Unknown insert mode - {$this->mode}");
+                throw new InvalidArgumentException("Unknown insert mode - {$this->mode}");
         }
 
         $queryPrefix .= " INTO `{$this->table}` (`{$columnsNames}`) VALUES ";

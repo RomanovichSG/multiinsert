@@ -4,6 +4,7 @@ namespace MultiInsert\Component\QueryBuilder;
 
 use MultiInsert\Component\Query\PdoQuery;
 use MultiInsert\Component\Query\QueryInterface;
+use PDO;
 
 /**
  * Class SqlQueryBuilder
@@ -14,16 +15,16 @@ class PdoQueryBuilder extends  AbstractQueryBuilder
 {
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     private $connection;
 
     /**
      * PdoQueryBuilder constructor.
      *
-     * @param \PDO $connection
+     * @param PDO $connection
      */
-    public function __construct(\PDO $connection)
+    public function __construct(PDO $connection)
     {
         $this->connection = $connection;
     }
